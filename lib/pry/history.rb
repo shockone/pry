@@ -85,7 +85,7 @@ class Pry
       path = history_file_path
 
       if File.exist?(path)
-        File.foreach(path) { |line| yield(line) }
+        File.foreach(path, "\v\n") { |line| yield(line.rstrip) }
       end
     rescue => error
       warn "History file not loaded: #{error.message}"
@@ -103,8 +103,8 @@ class Pry
     end
 
     # The default saver. Appends the given line to `Pry.history.config.file`.
-    def save_to_file(line)
-      history_file.puts line if history_file
+    def save_to_file(entry)
+      history_file.puts "#{entry}\v" if history_file
     end
 
     # The history file, opened for appending.
